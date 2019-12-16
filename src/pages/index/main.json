@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "van-toast": "/static/vant/toast/index",
+    "van-button": "/static/vant/button/index"
+  }
+}

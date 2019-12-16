@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { formatTime } from '@/utils/index'
+import Utils from '@/utils/index'
 import card from '@/components/card'
 
 export default {
@@ -43,7 +43,7 @@ export default {
     } else {
       logs = mpvue.getStorageSync('logs') || []
     }
-    this.logs = logs.map(log => formatTime(new Date(log)))
+    this.logs = logs.map(log => Utils.formatTime(new Date(log)))
   }
 }
 </script>
