@@ -2,6 +2,14 @@
 @import url('../../style/index');
 .page-index{
   .graphic-container{
+      position: relative;
+      height: calc(100vh - 50px);
+      background-color: #cecece;
+  }
+  .wrapper{
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
     .img{
       width: 100% !important;
     }
@@ -11,17 +19,13 @@
       text-align: center;
     }
     .words-box{
-      &>.words{
+      .words{
         margin: 15px auto;
         padding: 0 15%;
         line-height: 1.6;
         word-break: break-all;
         word-wrap: break-word;
       }
-      .author-by{
-
-      }
-      
     }
   }
 }
