@@ -1,6 +1,6 @@
 <template>
   <div class="page-index">
-    <x-header></x-header>
+    <x-header :weatherData="weatherData"></x-header>
     <div
       class="graphic-container"
       @touchstart.stop.prevent="toucheStartEvent"
@@ -32,8 +32,7 @@
 import card from '@/components/card'
 import XHeader from '@/components/indexCp/XHeader'
 import Utils from '@/utils/index'
-import Api from '@/api/'
-
+// import Api from '@/api/'
 export default {
   components: {
     card,
@@ -59,36 +58,36 @@ export default {
       touchData: {
         start: 0,
         move: 0
-      }
+      },
+      bmap: null,
+      weatherData: '深圳&nbsp;25℃'
     }
   },
   computed: {},
   watch: {},
-  created() {
-    this.$MinPromise.getSystemInfo().then(res => {
-      this.winW = res.windowWidth
-      // this.$MinPromise.login().then(res => {
-      //   console.log(res)
-      // })
-      this.createData(0, 2).then(res => {
-        this.dataList = this.dataList.concat(res)
-      })
-      Api.getNewsLatest().then(res => {
-        console.log('新闻：', res)
-      })
+  async created() {
+    const getSystemInfo = () => this.$MinPromise.getSystemInfo()
+    let [err, result] = await this.$utils.errorCaptured(getSystemInfo)
+    if (err) throw new Error(err)
+    this.winW = result.windowWidth
+    this.createData(this.currIndex).then(res => {
+      this.dataList = res
     })
   },
   onShow() {},
   async onPullDownRefresh() {
     // to doing..
-    this.$utils.delay(1000).then(() => {
-      this.createData(0, 2).then(res => {
+    this.$utils
+      .delay(1000)
+      .then(() => {
+        return this.createData(0)
+      })
+      .then(res => {
         this.dataList = res
         this.currIndex = 0
         // 停止下拉刷新
         mpvue.stopPullDownRefresh()
       })
-    })
   },
 
   methods: {
@@ -139,8 +138,7 @@ export default {
       // let _dy = startPoint.y - movePoint.y
       this.dataList[this.currIndex].left = _dx
       this.touchData.move = e.touches[0]
-    }, 100),
-
+    }, 50),
     touchEndEvent() {
       let directData = this.handleDirectionFn(this.touchData)
       let isHalf = Math.floor(this.winW / 3)
