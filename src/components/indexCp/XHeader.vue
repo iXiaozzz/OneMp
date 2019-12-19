@@ -1,18 +1,18 @@
 <template>
   <div class="x-header">
-    <div class="date" @tap.stop="handleClickDate">
-      <span class="day">16</span>
-      <span class="ym">03.2019</span>
-    </div>
-    <div class="weather" v-html="weatherInfo"></div>
-    <van-popup
-      :show="popupShow"
-      position="bottom"
-      custom-style="height: 240px;"
-      @close="handleClickClose"
+    <picker
+      class="date"
+      mode="date"
+      :value="date"
+      start="1993-01-01"
+      :end="todayDate"
+      @change="bindDateChange"
     >
-      <select-date></select-date>
-    </van-popup>
+      <span class="day">{{dateObj.day}}</span>
+      <span class="ym">{{dateObj.month}}.{{dateObj.year}}</span>
+    </picker>
+
+    <div class="weather" v-html="weatherInfo"></div>
   </div>
 </template>
 
@@ -27,13 +27,17 @@ export default {
     return {
       weatherInfo: '',
       bmap: null,
-      popupShow: true
+      popupShow: true,
+      date: '2019-07-01',
+      todayDate: '',
+      dateObj: { year: '2019', month: '07', day: '01' }
     }
   },
   computed: {},
   created() {
     this.bmap = new BMap({ ak: 'd6KGbQ7m9ImkVZuh9icOzsKF6cgxsEfK' })
     this.getWeatherInfoFn()
+    this.getCurrentDate()
   },
   onShow() {
     this.getWeatherInfoFn()
@@ -42,11 +46,21 @@ export default {
     this.getWeatherInfoFn()
   },
   methods: {
-    handleClickDate() {
-      this.popupShow = !this.popupShow
+    bindDateChange(e) {
+      this.date = e.mp.detail.value
+      let dateArr = this.date.split('-')
+      this.dateObj.year = dateArr[0]
+      this.dateObj.month = dateArr[1]
+      this.dateObj.day = dateArr[2]
     },
-    handleClickClose() {
-      this.popupShow = false
+    getCurrentDate() {
+      let D = new Date()
+      this.dateObj.year = D.getFullYear()
+      this.dateObj.month = D.getMonth() + 1
+      this.dateObj.day = D.getDate()
+      this.todayDate =
+        this.dateObj.year + '-' + this.dateObj.month + '-' + this.dateObj.day
+      this.date = this.todayDate
     },
     getWeatherInfoFn() {
       const _this = this

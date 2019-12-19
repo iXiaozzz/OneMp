@@ -14,7 +14,7 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black",
-    "enablePullDownRefresh": true
+    "onReachBottomDistance": 150
   },
   "tabBar": {
     "color": "#999",
@@ -39,20 +39,6 @@
         "pagePath": "pages/me/main",
         "iconPath": "static/tabs/orders.png",
         "selectedIconPath": "static/tabs/orders-active.png"
-      }
-    ],
-    "items": [
-      {
-        "name": "首页",
-        "pagePath": "pages/index/main",
-        "icon": "static/tabs/home.png",
-        "activeIcon": "static/tabs/home-active.png"
-      },
-      {
-        "name": "订单",
-        "pagePath": "pages/logs/main",
-        "icon": "static/tabs/orders.png",
-        "activeIcon": "static/tabs/orders-active.png"
       }
     ],
     "position": "bottom"

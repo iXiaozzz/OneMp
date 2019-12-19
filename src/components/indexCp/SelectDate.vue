@@ -1,9 +1,9 @@
 <template>
   <div class="picker-container">
-    <div class="btn-box">
+    <!-- <div class="btn-box">
       <button class="y-btn" size="mini" type="primary">确定</button>
-    </div>
-    <picker-view
+    </div>-->
+    <!-- <picker-view
       indicator-style="height: 40px;"
       style="width: 100%; height: 200px;"
       :value="value"
@@ -18,7 +18,10 @@
       <picker-view-column>
         <div class="item" v-for="d in days" :key="d" style="line-height: 50px">{{d}}日</div>
       </picker-view-column>
-    </picker-view>
+    </picker-view>-->
+    <picker mode="date" :value="date" start="1993-01-01" end="2019-12-21" @change="bindDateChange">
+      <div class="picker">当前选择: {{date}}</div>
+    </picker>
   </div>
 </template>
 
@@ -34,7 +37,8 @@ export default {
       days: [],
       day: 2,
       value: [9999, 1, 1],
-      dateString: ''
+      dateString: '',
+      date: '2016-09-01'
     }
   },
   computed: {},
@@ -68,6 +72,10 @@ export default {
       // this.day = this.dealNumFn(this.day)
       // this.dateString = this.year + '-' + this.month + '-' + this.day
       // console.log('dateString:', this.dateString)
+    },
+    bindDateChange: function(e) {
+      console.log('picker发送选择改变，携带值为', e)
+      // this.date = e.detail.value
     },
     dealNumFn(num) {
       return num < 10 ? `0${num}` : num
