@@ -9,7 +9,11 @@
       @scrolltoupper="bindscrolltoupper"
       @scrolltolower="bindscrolltolower"
     >
-      <p class="item" v-for="item in list" :key="item">{{item}}</p>
+      <div class="refresh-box" v-show="isRefresh">正在刷新...</div>
+      <virtual-list :size="40" :remain="25">
+        <p class="item" v-for="item in list" :key="item">{{item}}</p>
+      </virtual-list>
+      <div class="loading-box" v-show="isLoading">正在加载...</div>
     </scroll-view>
   </div>
 </template>
@@ -21,7 +25,9 @@ export default {
       list: [],
       selectQuery: null,
       oList: null,
-      queryForm: { page: 1, pageSize: 100 }
+      isRefresh: false,
+      isLoading: false,
+      queryForm: { page: 1, pageSize: 30 }
     }
   },
   computed: {},
@@ -33,33 +39,27 @@ export default {
   //   this.queryListData()
   // },
   async onPullDownRefresh() {
-    this.queryForm.page = 1
-    this.list = []
-    this.$nextTick(() => {
-      this.queryListData()
-    })
+    // this.queryForm.page = 1
+    // this.list = []
+    // this.$nextTick(() => {
+    //   this.queryListData()
+    // })
   },
   methods: {
     bindscroll(e) {
-      console.log(e)
+      // console.log(e)
     },
     bindscrolltoupper() {
-      console.log(22)
-    },
-    bindscrolltolower() {
-      console.log(11)
-      this.queryListData()
-    },
-    checkOListHeight() {
-      this.selectQuery = mpvue.createSelectorQuery()
-      this.selectQuery.select('#list').boundingClientRect()
-      this.selectQuery.selectViewport().scrollOffset()
-      this.selectQuery.exec(function(rect) {
-        console.log(rect[0].height)
+      this.queryForm.page = 1
+      this.list = []
+      this.isRefresh = true
+      this.$nextTick(() => {
+        this.queryListData()
       })
     },
-    boundingClientRect() {
-      return this.selectQuery.select('.list-container').boundingClientRect()
+    bindscrolltolower() {
+      this.isLoading = true
+      this.queryListData()
     },
     forgeData(opt) {
       let temp = []
@@ -71,13 +71,17 @@ export default {
       return temp
     },
     queryListData() {
-      this.list = this.list.concat(this.forgeData(this.queryForm))
-      this.queryForm.page += 1
-      this.$nextTick(() => {
-        this.checkOListHeight()
+      this.$utils.delay(1500).then(() => {
+        this.isRefresh = false
+        this.isLoading = false
+        this.list = Object.freeze(
+          this.list.concat(this.forgeData(this.queryForm))
+        )
+
+        this.queryForm.page += 1
+        // 停止刷新
+        mpvue.stopPullDownRefresh()
       })
-      // 停止刷新
-      mpvue.stopPullDownRefresh()
     }
   }
 }

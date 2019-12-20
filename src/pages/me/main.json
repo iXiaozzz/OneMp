@@ -1,3 +1,8 @@
 {
-  "navigationBarTitleText": "查看启动日志"
+  "navigationBarTitleText": "查看启动日志",
+  "usingComponents": {
+    "van-toast": "/static/vant/toast/index",
+    "van-button": "/static/vant/button/index",
+    "van-popup": "/static/vant/popup/index"
+  }
 }
